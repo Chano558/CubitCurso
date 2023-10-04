@@ -1,15 +1,24 @@
 ﻿using curso_cubit_web.Models;
 using Microsoft.AspNetCore.Mvc;
+using ServiceWCF;
 
 namespace curso_cubit_web.Controllers
 {
     public class PersonController : Controller
     {
-        public IActionResult Index()
+        public readonly Service1Client serviceClient;
+
+        public PersonController()
         {
+            serviceClient = new Service1Client();
+        }
+
+        public async Task<IActionResult> IndexAsync()
+        {
+            var user = await serviceClient.GetUsuarioAsync("luciano", "peralta");
             var person = new PersonViewModel
             {
-                Name = "Juan Carlos"
+                Name = user.Name + " - " + user.SurName
             };
 
             return View(person);
